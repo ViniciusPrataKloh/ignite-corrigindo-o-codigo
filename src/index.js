@@ -34,15 +34,34 @@ app.put("/repositories/:id", (request, response) => {
 
   repositoryIndex = repositories.findIndex(repository => repository.id === id);
 
-  if (repositoryIndex < 0) {
+  if (repositoryIndex == -1) {
     return response.status(404).json({ error: "Repository not found" });
   }
 
-  const repository = { ...repositories[repositoryIndex].uuid, ...updatedRepository };
+  if (title != undefined) {
+    repositories[repositoryIndex].title = title;
+  }
 
-  repositories[repositoryIndex] = repository;
+  if (url != undefined) {
+    repositories[repositoryIndex].url = url;
+  }
 
-  return response.json(repository);
+  if (techs != undefined) {
+    /**
+     * Caso seja necessario apenas inserir novas techs:
+     */
+
+    // techs.forEach(element => {
+    //   if (!repositories[repositoryIndex].techs.find(
+    //     tech => tech === element
+    //   )) {
+    //     repositories[repositoryIndex].techs.push(element);
+    //   }
+    // });
+    repositories[repositoryIndex].techs = techs;
+  }
+
+  return response.json(repositories[repositoryIndex]);
 });
 
 app.delete("/repositories/:id", (request, response) => {
